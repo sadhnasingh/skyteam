@@ -1,0 +1,59 @@
+<% @title="Password Reset | SLA" %>
+<div class='container-fluid login bg-dark-grey'>
+    <div class="container">
+        <div class="row mt50b150">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, name: 'reset_password'}) do |f| %>
+                  <div class="form-group text-center">
+                      <h3 class="mb40">Change your password</h3>
+                  </div> 
+                  <div class="login-white-box">
+                      <%= devise_error_messages! %>
+                      <%= f.hidden_field :reset_password_token %>
+
+                      <div class="form-group">
+                          <%= f.label :password, "New password" %><br />
+                          <% if @minimum_password_length %>
+                            <em>(<%= @minimum_password_length %> characters minimum)</em><br />
+                          <% end %>
+                          <%= f.password_field :password, autofocus: true, autocomplete: "off",class: 'form-control input-form-control' %>
+                        </div>
+
+                        <div class="form-group">
+                            <%= f.label :password_confirmation, "Confirm new password" %><br />
+                            <%= f.password_field :password_confirmation, autocomplete: "off",class: 'form-control input-form-control' %>
+                          </div>
+
+                          <div class="form-group row">
+                              <div class="col-md-12">
+                                  <div class="pull-left">
+                                      <%= f.submit "Change password",class: "btn btn-blue btn-block" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sign-in-footer text-center">
+                            <%= link_to "Login", new_session_path(resource_name) %><br />
+                        </div>
+                      <% end %>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <script type="text/javascript">
+        $(document).ready(function () {
+            $("form[name='reset_password']").validate({
+                rules: {
+                    "user[password]": {required: true},
+                    "user[password_confirmation]": {
+                        equalTo: "#user_password",
+                        required: true
+                    }
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+        });
+      </script>

@@ -1,0 +1,133 @@
+<% @title="Sign In | SLA" %>
+<div class='container-fluid login bg-dark-grey'>
+    <div class="container">
+        <div class="row mt50b150">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {name: 'user_sign_in'}) do |f| %>
+                  <div class="form-group text-center">
+                      <h3 class="mb40">Login</h3>
+                  </div> 
+                  <div class="login-white-box">
+                      <%= devise_error_messages! %>
+                      <% flash.each do |key, value| %>
+                        <% if(value != "Signed out successfully.") %>
+                          <div class="flash alert alert-warning <%= key %>"><%= value %></div>
+                        <% end%>
+                      <% end %>
+                      <% if(params['redirect'].present? && params['redirect'] =="checkout") %>
+                        <div class="alert alert-warning">Please login to proceed for checkout</div>
+                      <% elsif(params['redirect'].present? && params['redirect'] =="pricing") %>
+                        <div class="alert alert-warning">Please login to proceed towards payment</div>
+                      <% end %>
+                      <div class="form-group">
+                          <%= f.label :email, class: 'sr-only' %>
+                            <%= f.email_field :email, autofocus: true, class: 'form-control input-form-control', placeholder: 'Email Address' %>
+                          </div>
+                          <div class="form-group">
+                              <%= f.label :password, class: 'sr-only' %>
+                                <%= f.password_field :password, autocomplete: "off", class: 'form-control input-form-control',placeholder: 'Password' %>
+                              </div>
+
+                              <% if devise_mapping.rememberable? -%>
+                                <div class="form-group">
+                                    <%= f.check_box :remember_me %>
+                                    <%= f.label :remember_me %>
+                                </div>
+                              <% end -%>
+                              <% if(params['redirect'].present?) %>
+                                <input type="hidden" name="redirect" value="<%= params['redirect'] %>">
+                              <% end %>
+                              <% if(params['redirect_to'].present?) %>
+                                <input type="hidden" name="redirect_to" value="<%= params['redirect_to'] %>">
+                              <% end %>
+                              <div class="form-group row">
+                                  <div class="col-md-12">
+                                      <div class="pull-left">
+                                          <input type="hidden" name="existing_session_data" value="<%= session[:book].present? ? session[:book] : '' %>">
+                                          <%= f.submit "Login", class: "btn btn-blue btn-block" %>
+                                        </div>
+                                        <div class="pull-right mt10 forgot-pass">
+                                            <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+                                              <%= link_to "Forgot your password?", new_password_path(resource_name) %>
+              <%#*<a href="#" title="Forgot Password" data-toggle="modal" data-target="#forgot-passowrd">Forgot my password</a>%>
+                                            <% end -%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sign-in-footer text-center">
+                                <p>Don't have an account? 
+                                    <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+                                      <% if(params['redirect'].present?) %>
+                                        <a href="<%= request.base_url %>/users/sign_up/?redirect=<%= params['redirect'] %>">Sign up</a>
+                                      <% else %>
+                                        <%= link_to "Sign up", new_registration_path(resource_name) %>
+                                      <% end %>
+                                    <% end -%>
+                            </div>
+                          <% end %>
+                      </div>
+                      <div class="col-md-3"></div>
+                  </div>
+              </div>
+        </div>
+          <div class="modal fade at-modal" id="forgot-passowrd" tabindex="-1" role="dialog">
+              <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+                      <div class="modal-header text-center">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title">Forget Password?</h4>
+                      </div>
+                      <div class="modal-body text-center">
+                          <p class="font-16">Please enter your email address. We will send you an email to reset your password.. </p>
+                          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+                            <%= devise_error_messages! %>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <%= f.label :email,class: "sr-only" %>
+                                          <%= f.email_field :email, autofocus: true,class: "form-control input-form-control",placeholder: "Enter your email" %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn at-btn-primary btn-block" id="forgot-passowrd-notification">
+                                                Send Email
+                                                <span class="svg-btn-arrow-right">
+                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" height="20" width="20" viewBox="0 0 20 20" xml:space="preserve">
+                                                    <g fill="#fff">
+                                                    <path class="thin-arrow-right" d="M12.5150732,6.35018478 C12.3229538,6.15543439 12.3232472,5.83997845 12.5157285,5.64559421 C12.7082098,5.45120998 13.0199903,5.45150681 13.2121097,5.6462572 L17.6528114,10.1477717 L18,10.4997148 L17.6528319,10.8516786 L13.2121302,15.3537221 C13.0200221,15.5484839 12.7082416,15.5487993 12.515749,15.3544265 C12.3232564,15.1600537 12.3229447,14.8445977 12.5150528,14.6498359 L16,11 L2,11 L2,10 L16,10 L12.5150732,6.35018478 L12.5150732,6.35018478 L12.5150732,6.35018478 Z"/>
+                                                    </g>
+                                                    </svg>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                              <% end %>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <script type="text/javascript">
+                $(document).ready(function () {
+                    $("form[name='user_sign_in']").validate({
+                        rules: {
+                            "user[password]": "required",
+                            "user[email]": {
+                                required: true,
+                                email: true
+                            }
+                        },
+                        messages: {
+                            "user[password]": "Please enter the password",
+                            "user[email]": "Please enter a valid email address"
+                        },
+                        submitHandler: function (form) {
+                            form.submit();
+                        }
+                    });
+                });
+              </script>

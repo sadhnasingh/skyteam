@@ -1,0 +1,66 @@
+<% @title="Forgot Password | SLA" %>
+<div class='container-fluid login bg-dark-grey'>
+    <div class="container">
+        <div class="row mt50b150">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, name: 'forgot_password'}) do |f| %>
+                  <div class="form-group text-center">
+                      <h3 class="mb40">Forgot your password?</h3>
+                  </div> 
+                  <div class="login-white-box">
+                      <% if flash[:success].present? %>
+                      <div role="alert" class="alert alert-info alert-dismissible show">
+                          <%= flash[:success] %>
+                          <a title="close" aria-label="close" data-dismiss="alert" class="close" href="#">×</a>
+                      </div>
+                    <% end %>
+                    <% if flash[:errors].present? %>
+                      <div role="alert" class="alert alert-warning alert-dismissible">
+                          <%= flash[:errors] %>
+                          <a title="close" aria-label="close" data-dismiss="alert" class="close" href="#">×</a>
+                      </div>
+                    <% end %>
+                    <% flash.clear %>
+
+                      <div class="form-group">
+                          Please enter your email address. We will send you an email to reset your password.. 
+                      </div>
+                      <div class="form-group">
+                          <%= f.label :email %><br />
+                          <%= f.email_field :email, autofocus: true,class: 'form-control input-form-control' %>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <div class="pull-left">
+                                    <%= f.submit "Send Email",class: "btn btn-blue btn-block" %>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="sign-in-footer text-center">
+                          <%= link_to "Login", new_session_path(resource_name) %><br />
+                      </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function () {
+          $("form[name='forgot_password']").validate({
+              rules: {
+                  "user[email]": {
+                      required: true,
+                      email: true
+                  }
+              },
+              messages: {
+                  "user[email]": "Please enter a valid email address"
+              },
+              submitHandler: function (form) {
+                  form.submit();
+              }
+          });
+      });
+    </script>

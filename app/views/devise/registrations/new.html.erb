@@ -1,0 +1,88 @@
+<% @title="Sign Up SLA " %>
+<div class='container-fluid login bg-dark-grey'>
+    <div class="container">
+        <div class="row mt50b150">
+
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {name: 'user_sign_up'}) do |f| %>
+                  <div class="form-group text-center">
+                      <h3 class="mb40">Sign Up</h3>
+                  </div> 
+                  <div class="login-white-box">
+                      <% if(params['redirect'].present? && params['redirect'] =="checkout") %>
+                        <div class="alert alert-warning">Please create an account to proceed for checkout</div>
+                      <% elsif(params['redirect'].present? && params['redirect'] =="pricing") %>
+                        <div class="alert alert-warning">Please create an account to proceed towards payment</div>
+                      <% end %>
+                      <%= devise_error_messages! %>
+                      <% flash.each do |key, value| %>
+                       <% if(value != "Signed out successfully.") %>
+                          <div class="flash alert alert-warning <%= key %>"><%= value %></div>
+                        <% end%>
+                      <% end %>
+                       
+                      <div class="form-group">
+                          <label for="first-name">First Name</label>
+                          <input type="text" class="form-control input-form-control" id="sign-up-firstname"name="user[user_firstname]" autofocus="autofocus" placeholder="First Name" value="<%= params.include?(:user)? params[:user][:user_firstname] : "" %>" />
+                      </div>
+                      <div class="form-group">
+                          <label for="last-name">Last Name</label>
+                          <input type="text" class="form-control input-form-control" id="sign-up-lastname" name="user[user_lastname]" placeholder="Last Name" value="<%= params.include?(:user)? params[:user][:user_lastname] : "" %>" />
+                      </div>
+                      <div class="form-group">
+                          <label for="user_email">Email</label>
+                          <input type="email" class="form-control input-form-control" id="user_email" name="user[email]" value="" placeholder="Email" value="<%= params.include?(:user)? params[:user][:email] : "" %>">
+                      </div>
+                      <div class="form-group">
+                          <label for="user_password">Password</label>
+                          <input type="password" class="form-control input-form-control" id="user_password" name="user[password]" autocomplete="off" placeholder="********">
+                      </div>
+                      <div class="form-group">
+                          <label for="user_password_confirmation">Confirm Password</label>
+                          <input type="password" class="form-control input-form-control" id="user_password_confirmation" name="user[password_confirmation]" autocomplete="off" placeholder="********">
+                      </div>
+                      <input type="hidden" name="user[user_type_id]" value="1">
+                      <% if(params['redirect'].present?) %>
+                        <input type="hidden" name="redirect" value="<%= params['redirect'] %>">
+                      <% end %>
+                      <div class="form-group">
+                          <input type="submit" data-disable-with="Sign up" value="Sign up" name="commit" class="btn btn-blue btn-block">
+                      </div>                      
+                  </div>
+                <% end %>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function () {
+      $("form[name='user_sign_up']").validate({
+          rules: {
+              "user[user_firstname]": "required",
+              "user[user_lastname]": "required",
+              "user[password]": "required",
+              "user[password_confirmation]": {
+                  equalTo: "#user_password",
+                  required: true
+              },
+              "user[email]": {
+                  required: true,
+                  email: true
+              }
+          },
+          messages: {
+              "user[password]": "Please enter the password",
+              "user[email]": "Please enter a valid email address",
+              "user[user_firstname]": "Please enter your first name",
+              "user[user_lastname]": "Please enter your lastname",
+              "user[password_confirmation]": "Please enter correct confirm password"
+          },
+          submitHandler: function (form) {
+              form.submit();
+          }
+      });
+  });
+
+</script>
